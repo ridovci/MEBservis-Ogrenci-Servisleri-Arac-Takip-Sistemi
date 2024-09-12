@@ -11,9 +11,10 @@
 ## Kullanılan Teknolojiler
 
 - **.NET Core**: Modern ve ölçeklenebilir web uygulamaları için kullanılan framework.
+- **Katmanlı Mimari**: Uygulama, SOLID prensiplerine uygun olarak yapılandırılmıştır.
 - **Entity Framework Core**: Veritabanı işlemleri için kullanılan ORM aracı.
 - **AutoMapper**: Nesne-DTO dönüşümlerini yönetmek için kullanılan popüler kütüphane.
-- **Katmanlı Mimari**: Uygulama, SOLID prensiplerine uygun olarak yapılandırılmıştır.
+- **JWT (JSON Web Token)**: Kimlik doğrulama ve yetkilendirme için kullanılmıştır.
 
 ## API Kontrolcüler
 
@@ -106,3 +107,7 @@ Bu kontrolcü, kullanıcı yönetimini sağlar.
   - `updatePasswordDto` (UpdatePasswordDto): Eski ve yeni şifre bilgilerini içeren DTO.
 
   **Yanıt:** Güncelleme işlemi sonucu veya hata mesajı.
+
+
+## Ekran Görüntüsü
+![MEBservis](https://github.com/user-attachments/assets/236e8738-4eb4-4c87-857c-cf50a8a34db4)
