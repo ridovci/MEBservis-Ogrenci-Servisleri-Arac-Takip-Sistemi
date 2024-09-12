@@ -1,0 +1,6 @@
+@MEBservis_HostAddress = http://localhost:5170
+
+GET {{MEBservis_HostAddress}}/MEBservis/
+Accept: application/json
+
+###

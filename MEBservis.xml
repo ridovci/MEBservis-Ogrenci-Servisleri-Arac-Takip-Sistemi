@@ -1,0 +1,1106 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MEBservis</name>
+    </assembly>
+    <members>
+        <member name="T:MEBservis.Api.Controllers.ReportController">
+            <summary>
+            Raporları oluşturmak ve almak için API uç noktalarını sağlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.ReportController.#ctor(MEBservis.Application.Services.IReportService)">
+            <summary>
+            <see cref="T:MEBservis.Api.Controllers.ReportController"/> sınıfının yeni bir örneğini başlatır.
+            </summary>
+            <param name="reportService">Rapor servisi örneği.</param>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.ReportController.GetReportAsync(System.Int32,System.DateTime)">
+            <summary>
+            Belirtilen kullanıcı ve tarih için raporları alır.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="date">Raporun alınacağı tarih.</param>
+            <returns>Rapor verileri veya 404 Not Found sonucu.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.ReportController.GetReportById(System.Int32)">
+            <summary>
+            Belirtilen oturum ID'sine göre rapor verilerini alır.
+            </summary>
+            <param name="sessionId">Oturum ID'si.</param>
+            <returns>Rapor verileri veya 404 Not Found sonucu.</returns>
+        </member>
+        <member name="T:MEBservis.Api.Controllers.TrackingController">
+            <summary>
+            Kullanıcı takip işlemlerini yönetmek için API kontrolcüsü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.TrackingController.#ctor(MEBservis.Application.Services.ITrackingSessionService,AutoMapper.IMapper)">
+            <summary>
+            TrackingController sınıfının yapıcı metodu.
+            </summary>
+            <param name="trackingSessionService">Takip oturumu servisi.</param>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.TrackingController.StartTracking(MEBservis.Application.DTOs.TrackingDataDto)">
+            <summary>
+            Kullanıcı için bir takip oturumu başlatır veya günceller.
+            </summary>
+            <param name="trackingDataDto">Kullanıcı ve konum bilgilerini içeren veri transfer objesi.</param>
+            <returns>Takip işlemi sonucunu belirten bir HTTP durumu.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.TrackingController.StopTracking(System.Int32)">
+            <summary>
+            Kullanıcı için aktif olan takip oturumunu durdurur.
+            </summary>
+            <param name="userId">Takip oturumu durdurulacak kullanıcının ID'si.</param>
+            <returns>Takip durdurma işleminin sonucunu belirten bir HTTP durumu.</returns>
+        </member>
+        <member name="T:MEBservis.Api.Controllers.UserController">
+            <summary>
+            Kullanıcılarla ilgili HTTP isteklerini yöneten denetleyici.
+            Kullanıcı bilgilerini almak, eklemek, güncellemek ve giriş yapmak için yöntemler sağlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.#ctor(MEBservis.Domain.Interfaces.IUserService,AutoMapper.IMapper,MEBservis.Application.Services.IAuthenticationService)">
+            <summary>
+            UserController sınıfının yapılandırıcısı.
+            </summary>
+            <param name="userService">Kullanıcı işlemlerini gerçekleştiren servis.</param>
+            <param name="mapper">Entity-DTO eşletirme sağlayan servis.</param>
+            <param name="authenticationService">Kimlik doğrulama işlemlerini gerçekleştiren servis.</param>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.GetAllUsersAsync">
+            <summary>
+            Tüm kullanıcıları getirir.
+            </summary>
+            <returns>HTTP 200 OK durumu ve kullanıcı listesi; eğer kullanıcı bulunamazsa HTTP 404 Not Found durumu.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Belirtilen ID'ye sahip bir kullanıcıyı getirir.
+            </summary>
+            <param name="id">Kullanıcının ID'si.</param>
+            <returns>HTTP 200 OK durumu ve kullanıcı bilgileri; eğer kullanıcı bulunamazsa HTTP 404 Not Found durumu.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.AddUserAsync(MEBservis.Application.DTOs.UserCreateDto)">
+            <summary>
+            Yeni bir kullanıcı ekler.
+            </summary>
+            <param name="userCreateDto">Eklenecek kullanıcının bilgileri.</param>
+            <returns>HTTP 201 Created durumu ve yeni kullanıcı ID'si; eğer ekleme işlemi başarısızsa HTTP 400 Bad Request durumu.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.UpdateUserAsync(MEBservis.Application.DTOs.UserUpdateDto)">
+            <summary>
+            Kullanıcıyı günceller.
+            </summary>
+            <param name="userUpdateDto">Güncellenecek kullanıcı bilgileri.</param>
+            <returns>İşlemin sonucu hakkında bilgi verir.</returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.LoginAsync(MEBservis.Application.DTOs.UserLoginDto)">
+            <summary>
+            Kullanıcı girişi sağlar. Başarılı bir giriş yapıldığında JWT token'ı döner.
+            </summary>
+            <param name="userLoginDto">Giriş yapmak isteyen kullanıcının bilgilerini içeren DTO. Bu DTO, kullanıcının e-posta adresi ve şifresini içerir.</param>
+            <returns>
+            Giriş işlemi başarılıysa, kullanıcıya ait JWT token'ını içeren bir <see cref="T:Microsoft.AspNetCore.Mvc.OkObjectResult"/> döner. 
+            Giriş bilgileri geçersizse, <see cref="T:Microsoft.AspNetCore.Mvc.UnauthorizedResult"/> döner.
+            Giriş verisi eksikse veya geçersizse, <see cref="T:Microsoft.AspNetCore.Mvc.BadRequestObjectResult"/> döner.
+            </returns>
+        </member>
+        <member name="M:MEBservis.Api.Controllers.UserController.UpdateUserPasswordAsync(MEBservis.Application.DTOs.UpdatePasswordDto)">
+            <summary>
+            Kullanıcı şifresini günceller.
+            </summary>
+            <param name="updatePasswordDto">Yeni şifre bilgilerini içeren DTO. DTO, kullanıcının eski şifresi ve yeni şifresini içerir.</param>
+            <returns>
+            Şifre güncelleme işlemi başarılıysa HTTP 200 OK durumu ve başarı mesajı döner; 
+            güncelleme başarısızsa HTTP 400 Bad Request durumu ve başarısızlık mesajı döner; 
+            işlem sırasında bir hata oluşursa HTTP 500 Internal Server Error durumu ve hata mesajı döner.
+            </returns>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.TrackingDataDto">
+            <summary>
+            Kullanıcı tarafından gönderilen konum verilerini temsil eden DTO sınıfı.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingDataDto.UserId">
+            <summary>
+            Kullanıcının benzersiz ID'si.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingDataDto.Latitude">
+            <summary>
+            Enlem bilgisi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingDataDto.Longitude">
+            <summary>
+            Boylam bilgisi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingDataDto.Timestamp">
+            <summary>
+            Konumun kaydedildiği tarih ve saat.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.TrackingSessionDto">
+            <summary>
+            Kullanıcı takip oturumlarını temsil eden veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingSessionDto.SessionId">
+            <summary>
+            Otomatik artan benzersiz ID.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingSessionDto.UserId">
+            <summary>
+            İlgili kullanıcı ID'si.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingSessionDto.StartTime">
+            <summary>
+            Takibin başlatıldığı zaman.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.TrackingSessionDto.EndTime">
+            <summary>
+            Takibin bitirildiği zaman (nullable).
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UpdatePasswordDto">
+            <summary>
+            Şifre güncelleme işlemi için kullanılan veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UpdatePasswordDto.UserId">
+            <summary>
+            Kullanıcının benzersiz kimlik numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UpdatePasswordDto.OldPassword">
+            <summary>
+            Kullanıcının mevcut şifresi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UpdatePasswordDto.NewPassword">
+            <summary>
+            Kullanıcının yeni şifresi.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserCreateDto">
+            <summary>
+            Kullanıcı oluşturma işlemi için gerekli bilgileri içeren veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.FirstName">
+            <summary>
+            Kullanıcının adı. Bu alan zorunludur ve maksimum 100 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.LastName">
+            <summary>
+            Kullanıcının soyadı. Bu alan zorunludur ve maksimum 100 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.TcKimlikNo">
+            <summary>
+            Kullanıcının T.C. Kimlik Numarası. Bu alan zorunludur ve maksimum 11 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.PasswordHash">
+            <summary>
+            Kullanıcının şifresi. Bu alan zorunludur.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.PhoneNumber">
+            <summary>
+            Kullanıcının telefon numarası. Bu alan zorunludur ve maksimum 15 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserCreateDto.VehiclePlateNo">
+            <summary>
+            Kullanıcının araç plaka numarası. Bu alan zorunludur ve maksimum 20 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserDto">
+            <summary>
+            Kullanıcı bilgilerini içeren veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.UserId">
+            <summary>
+            Kullanıcının benzersiz kimlik numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.FirstName">
+            <summary>
+            Kullanıcının adı.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.LastName">
+            <summary>
+            Kullanıcının soyadı.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.TcKimlikNo">
+            <summary>
+            Kullanıcının T.C. Kimlik Numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.PhoneNumber">
+            <summary>
+            Kullanıcının telefon numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.VehiclePlateNo">
+            <summary>
+            Kullanıcının araç plaka numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserDto.RoleId">
+            <summary>
+            Kullanıcının rol ID'si.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserLoginDto">
+            <summary>
+            Kullanıcı giriş bilgilerini içeren veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserLoginDto.TcKimlikNo">
+            <summary>
+            Kullanıcının T.C. Kimlik Numarası. Bu alan zorunludur ve maksimum 11 karakter uzunluğunda olabilir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserLoginDto.Password">
+            <summary>
+            Kullanıcının şifresi. Bu alan zorunludur.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserRoleUpdateDto">
+            <summary>
+            Kullanıcı yeni rol bilgisini içeren veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserRoleUpdateDto.UserId">
+            <summary>
+            Kullanıcı Id'si
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserRoleUpdateDto.NewRoleId">
+            <summary>
+            Kullanıcı yeni rolü
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserUpdateDto">
+            <summary>
+            Kullanıcı güncelleme bilgilerini içeren veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserUpdateDto.UserId">
+            <summary>
+            Güncellenmek istenen kullanıcının benzersiz kimlik numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserUpdateDto.PhoneNumber">
+            <summary>
+            Kullanıcının telefon numarası.
+            Maksimum uzunluk 15 karakterdir.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserUpdateDto.VehiclePlateNo">
+            <summary>
+            Kullanıcının araç plaka numarası.
+            Maksimum uzunluk 20 karakterdir.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.DTOs.UserWithPasswordDto">
+            <summary>
+            Şifre bilgilerini içeren kullanıcı veri transfer nesnesi (DTO).
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserWithPasswordDto.UserId">
+            <summary>
+            Kullanıcının benzersiz kimlik numarası.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.DTOs.UserWithPasswordDto.PasswordHash">
+            <summary>
+            Kullanıcının şifre hash'i.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.Mapping.MappingProfile">
+            <summary>
+            AutoMapper profilini yapılandıran sınıf.
+            Bu sınıf, model ve DTO'lar arasındaki eşlemeleri tanımlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Mapping.MappingProfile.#ctor">
+            <summary>
+            MappingProfile sınıfının yapılandırıcısı.
+            Burada, model ve DTO'lar arasındaki eşlemeler tanımlanır.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Application.Services.AuthenticationService">
+            <summary>
+            Kullanıcı kimlik doğrulama işlemlerini yöneten servis sınıfı.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.AuthenticationService.#ctor(MEBservis.Domain.Interfaces.IUserRepository,MEBservis.Domain.Interfaces.ITokenService)">
+            <summary>
+            AuthenticationService sınıfının bir örneğini oluşturur.
+            </summary>
+            <param name="userRepository">Kullanıcı repository'si.</param>
+            <param name="tokenService">JWT token oluşturmak için kullanılan servis.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.AuthenticationService.LoginAsync(MEBservis.Application.DTOs.UserLoginDto)">
+            <summary>
+            Kullanıcının giriş bilgilerini asenkron olarak doğrular.
+            </summary>
+            <param name="userLoginDto">Giriş yapmak isteyen kullanıcının giriş bilgileri.</param>
+            <returns>Giriş işleminin sonucunu belirten bir <see cref="T:System.Threading.Tasks.Task`1"/> döndürür.
+            Kullanıcı doğrulandıysa <c>true</c>, aksi takdirde <c>false</c> döner.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.ReportService">
+            <summary>
+            Raporlarla ilgili işlemleri yönetir.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.ReportService.#ctor(MEBservis.Domain.Interfaces.IReportRepository,AutoMapper.IMapper)">
+            <summary>
+            <see cref="T:MEBservis.Application.Services.ReportService"/> sınıfının yeni bir örneğini başlatır.
+            </summary>
+            <param name="repository">Rapor verilerini almak için kullanılan repository örneği.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.ReportService.GetSessionByUserIdAndDateAsync(System.Int32,System.DateTime)">
+            <summary>
+            Belirtilen kullanıcı ve tarihe göre takip oturumlarını alır.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="date">Tarih.</param>
+            <returns>Takip oturumları.</returns>
+            <exception cref="T:System.Exception">Veri bulunamadığında veya başka bir hata oluştuğunda.</exception>
+        </member>
+        <member name="M:MEBservis.Application.Services.ReportService.GetDataBySessionIdAsync(System.Int32)">
+            <summary>
+            Belirtilen oturum ID'sine göre takip verilerini alır.
+            </summary>
+            <param name="sessionId">Oturum ID'si.</param>
+            <returns>Takip verileri.</returns>
+            <exception cref="T:System.Exception">Veri bulunamadığında veya başka bir hata oluştuğunda.</exception>
+        </member>
+        <member name="T:MEBservis.Application.Services.TokenService">
+            <summary>
+            JWT token oluşturma hizmeti sağlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.TokenService.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            TokenService sınıfının yeni bir örneğini başlatır.
+            </summary>
+            <param name="configuration">Uygulama konfigürasyonlarını içeren nesne.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.TokenService.GenerateJwtToken(User)">
+            <summary>
+            Kullanıcı için JWT token oluşturur.
+            </summary>
+            <param name="user">Token oluşturulacak kullanıcı nesnesi.</param>
+            <returns>Oluşturulan JWT token.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.TrackingSessionService">
+            <summary>
+            Kullanıcı takip oturumları ve konum verilerini yönetmek için servis sınıfı.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.TrackingSessionService.#ctor(MEBservis.Domain.Interfaces.ITrackingSessionRepository)">
+            <summary>
+            TrackingSessionService sınıfının yapıcı metodu.
+            </summary>
+            <param name="repository">Takip oturumu ve konum verisi için repository.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.TrackingSessionService.StartOrUpdateTrackingSessionAsync(System.Int32,TrackingData)">
+            <summary>
+            Kullanıcı için aktif bir takip oturumu başlatır veya mevcut bir oturumu günceller.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="trackingData">Eklenmesi gereken konum verisi.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.TrackingSessionService.StopTrackingSessionAsync(System.Int32)">
+            <summary>
+            Kullanıcıya ait aktif takip oturumunu durdurur.
+            </summary>
+            <param name="userId">Takip oturumunu durdurulacak kullanıcının ID'si.</param>
+            <exception cref="T:System.Exception">Aktif bir takip oturumu bulunamadığında bir istisna fırlatır.</exception>
+            <returns>Güncelleme işlemi tamamlandığında bir <see cref="T:System.Threading.Tasks.Task"/> döner.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.UserService">
+            <summary>
+            Kullanıcı ile ilgili işlemleri yöneten servis sınıfı.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.#ctor(MEBservis.Domain.Interfaces.IUserRepository,AutoMapper.IMapper)">
+            <summary>
+            UserService sınıfını başlatan yapılandırıcı.
+            </summary>
+            <param name="userRepository">Kullanıcı repository'si.</param>
+            <param name="mapper">AutoMapper nesnesi.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.GetAllUsersAsync">
+            <summary>
+            Tüm kullanıcıları alır.
+            </summary>
+            <returns>Kullanıcıların bir koleksiyonu.</returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Verilen ID'ye sahip kullanıcıyı alır.
+            </summary>
+            <param name="id">Kullanıcının ID'si.</param>
+            <returns>Kullanıcı DTO'su veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.AddUserAsync(MEBservis.Application.DTOs.UserCreateDto)">
+            <summary>
+            Yeni bir kullanıcı ekler.
+            </summary>
+            <param name="userCreateDto">Eklenecek kullanıcı DTO'su.</param>
+            <param name="password">Şifreyi hashlemek için ayrı aldık.</param>
+            <returns>Kullanıcının başarıyla eklenip eklenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.UpdateUserAsync(MEBservis.Application.DTOs.UserUpdateDto)">
+            <summary>
+            Var olan bir kullanıcıyı günceller.
+            </summary>
+            <param name="userUpdateDto">Güncellenecek kullanıcı DTO'su.</param>
+            <returns>Kullanıcının başarıyla güncellenip güncellenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.UpdateUserPasswordAsync(MEBservis.Application.DTOs.UpdatePasswordDto)">
+            <summary>
+            Kullanıcının şifresini günceller. Eski şifre doğru ise yeni şifre hash'lenir ve kaydedilir.
+            </summary>
+            <param name="updatePasswordDto">Yeni şifre bilgilerini içeren DTO. DTO, kullanıcının mevcut şifresi ve yeni şifresini içerir.</param>
+            <returns>
+            Şifrenin başarıyla güncellenip güncellenmediğini belirten bir değer. 
+            True dönerse güncelleme başarılıdır, False dönerse güncelleme başarısız olmuştur.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            Eski veya yeni şifre boşsa veya eski şifre geçersizse bir hata fırlatılır.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Şifre doğrulama sırasında bir hata oluşursa fırlatılır.
+            </exception>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.GetUserWithPasswordByIdAsync(System.Int32)">
+            <summary>
+            Kullanıcı bilgilerini ve şifre hash'ini veritabanından alır ve DTO'ya dönüştürür.
+            </summary>
+            <param name="userId">Bilgileri alınacak kullanıcının benzersiz ID'si.</param>
+            <returns>
+            Kullanıcı bilgilerini ve şifre hash'ini içeren bir <see cref="T:MEBservis.Application.DTOs.UserWithPasswordDto"/> nesnesi döner. 
+            Kullanıcı bulunamazsa null döner.
+            </returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.UserService.IsAdminAsync(System.Int32)">
+            <summary>
+            Kullanıcının admin olup olmadığını kontrol eder.
+            </summary>
+            <param name="userId">Kullanıcının ID'si.</param>
+            <returns>Kullanıcının admin olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.IAuthenticationService">
+            <summary>
+            Kullanıcı kimlik doğrulama servis arayüzü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.IAuthenticationService.LoginAsync(MEBservis.Application.DTOs.UserLoginDto)">
+            <summary>
+            Kullanıcının giriş bilgilerini asenkron olarak doğrular.
+            </summary>
+            <param name="userLoginDto">Giriş yapmak isteyen kullanıcının giriş bilgileri.</param>
+            <returns>JWT token veya <c>null</c>.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.IReportService">
+            <summary>
+            Rapor servis arayüzü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.IReportService.GetSessionByUserIdAndDateAsync(System.Int32,System.DateTime)">
+            <summary>
+            Belirtilen kullanıcı ve tarihe göre takip oturumlarını alır.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="date">Tarih.</param>
+            <returns>Takip oturumları.</returns>
+        </member>
+        <member name="M:MEBservis.Application.Services.IReportService.GetDataBySessionIdAsync(System.Int32)">
+            <summary>
+            Belirtilen oturum ID'sine göre takip verilerini alır.
+            </summary>
+            <param name="sessionId">Oturum ID'si.</param>
+            <returns>Takip verileri.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Services.ITrackingSessionService">
+            <summary>
+            Kullanıcı takip oturumlarını yönetmek için servis arayüzü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Application.Services.ITrackingSessionService.StartOrUpdateTrackingSessionAsync(System.Int32,TrackingData)">
+            <summary>
+            Kullanıcı için aktif bir takip oturumu başlatır veya mevcut bir oturumu günceller.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="trackingData">Eklenmesi gereken konum verisi.</param>
+        </member>
+        <member name="M:MEBservis.Application.Services.ITrackingSessionService.StopTrackingSessionAsync(System.Int32)">
+            <summary>
+            Kullanıcıya ait aktif takip oturumunu durdurur.
+            </summary>
+            <param name="userId">Takip oturumunu durdurulacak kullanıcının ID'si.</param>
+            <returns>Güncelleme işlemi tamamlandığında bir <see cref="T:System.Threading.Tasks.Task"/> döner.</returns>
+        </member>
+        <member name="T:MEBservis.Application.Utilities.PagedResult`1">
+            <summary>
+            Sayfalama sonuçlarını temsil eden sınıf.
+            </summary>
+            <typeparam name="T">Sayfalama sonuçları türü.</typeparam>
+        </member>
+        <member name="P:MEBservis.Application.Utilities.PagedResult`1.Items">
+            <summary>
+            Sayfada bulunan öğeler.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Application.Utilities.PagedResult`1.TotalCount">
+            <summary>
+            Toplam öğe sayısı.
+            </summary>
+        </member>
+        <member name="T:MEBservis.Domain.Interfaces.IReportRepository">
+            <summary>
+            Raporlama işlemleri için gerekli veritabanı işlemlerini sağlayan arayüz.
+            Bu arayüz, kullanıcıya ait takip oturumlarını ve takip verilerini almak için gerekli metodları tanımlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IReportRepository.GetSessionByUserIdAndDateAsync(System.Int32,System.DateTime)">
+            <summary>
+            Kullanıcı ID'si ve tarih bilgisine göre takip oturumlarını getirir.
+            </summary>
+            <param name="userId">Takip oturumlarını almak istenen kullanıcının benzersiz ID'si.</param>
+            <param name="date">Oturumların ait olduğu tarih.</param>
+            <returns>Belirtilen tarih ve kullanıcıya ait takip oturumlarını içeren bir koleksiyon.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IReportRepository.GetDataBySessionIdAsync(System.Int32)">
+            <summary>
+            Verilen takip oturum ID'sine göre takip verilerini getirir.
+            </summary>
+            <param name="sessionId">Verilerini almak istenen takip oturumunun benzersiz ID'si.</param>
+            <returns>Belirtilen takip oturumuna ait takip verilerini içeren bir koleksiyon.</returns>
+        </member>
+        <member name="T:MEBservis.Domain.Interfaces.ITokenService">
+            <summary>
+            Kullanıcı kimlik doğrulama ve yetkilendirme işlemleri için JSON Web Token (JWT) oluşturma işlemlerini sağlayan arayüz.
+            Bu arayüz, kullanıcılar için JWT token'lar oluşturmak amacıyla gerekli metodları tanımlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITokenService.GenerateJwtToken(User)">
+            <summary>
+            Verilen kullanıcı bilgileriyle bir JSON Web Token (JWT) oluşturur.
+            </summary>
+            <param name="user">Token oluşturulacak kullanıcının bilgileri.</param>
+            <returns>
+            Oluşturulan JWT token'ı içeren bir dize. Token, kullanıcının kimlik doğrulamasını ve yetkilendirmesini sağlamak için kullanılabilir.
+            </returns>
+        </member>
+        <member name="T:MEBservis.Domain.Interfaces.ITrackingSessionRepository">
+            <summary>
+            Kullanıcı takip oturumları ve konum verileri için repository arayüzü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITrackingSessionRepository.GetActiveSessionByUserIdAsync(System.Int32)">
+            <summary>
+            Belirtilen kullanıcı ID'sine göre aktif takip oturumunu getirir.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <returns>Aktif takip oturumu veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITrackingSessionRepository.AddTrackingSessionAsync(TrackingSession)">
+            <summary>
+            Yeni bir takip oturumu ekler.
+            </summary>
+            <param name="trackingSession">Eklenecek takip oturumu.</param>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITrackingSessionRepository.AddTrackingDataAsync(TrackingData)">
+            <summary>
+            Yeni bir konum verisi ekler.
+            </summary>
+            <param name="trackingData">Eklenecek konum verisi.</param>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITrackingSessionRepository.UserExistsAsync(System.Int32)">
+            <summary>
+            Veritabanında belirtilen kullanıcı ID'sine sahip bir kullanıcı olup olmadığını kontrol eder.
+            </summary>
+            <param name="userId">Kontrol edilecek kullanıcının ID'si.</param>
+            <returns>Kullanıcı mevcutsa <c>true</c>, değilse <c>false</c> döner.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.ITrackingSessionRepository.UpdateTrackingSessionAsync(TrackingSession)">
+            <summary>
+            Veritabanındaki mevcut takip oturumunu günceller.
+            </summary>
+            <param name="trackingSession">Güncellenecek takip oturumu nesnesi.</param>
+            <returns>Güncelleme işlemi tamamlandığında bir <see cref="T:System.Threading.Tasks.Task"/> döner.</returns>
+        </member>
+        <member name="T:MEBservis.Domain.Interfaces.IUserRepository">
+            <summary>
+            Kullanıcı veri erişim yöntemlerini tanımlar.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.GetAllUsersAsync">
+            <summary>
+            Veritabanındaki tüm kullanıcıları alır.
+            </summary>
+            <returns>Kullanıcıların bir koleksiyonu.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Veritabanında verilen ID'ye sahip kullanıcıyı bulur.
+            </summary>
+            <param name="id">Kullanıcının ID'si.</param>
+            <returns>Kullanıcı nesnesi.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.GetUserByTcKimlikNoAsync(System.String)">
+            <summary>
+            Veritabanında verilen TC Kimlik Numarasına sahip kullanıcıyı bulur.
+            </summary>
+            <param name="tcKimlikNo">TC Kimlik Numarası.</param>
+            <returns>Kullanıcı nesnesi.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.TcKimlikNoExistsAsync(System.String)">
+            <summary>
+            Verilen TC Kimlik Numarasının veritabanında mevcut olup olmadığını kontrol eder.
+            </summary>
+            <param name="tcKimlikNo">TC Kimlik Numarası.</param>
+            <returns>TC Kimlik Numarasının var olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.VehiclePlateNoExistsAsync(System.String)">
+            <summary>
+            Verilen araç plaka numarasının veritabanında mevcut olup olmadığını kontrol eder.
+            </summary>
+            <param name="vehiclePlateNo">Araç plaka numarası.</param>
+            <returns>Araç plaka numarasının var olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.AddUserAsync(User)">
+            <summary>
+            Verilen kullanıcıyı veritabanına ekler.
+            </summary>
+            <param name="user">Eklenecek kullanıcı nesnesi.</param>
+            <returns>Kullanıcının başarıyla eklenip eklenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.UpdateUserAsync(User)">
+            <summary>
+            Veritabanındaki mevcut bir kullanıcıyı günceller.
+            </summary>
+            <param name="user">Güncellenecek kullanıcı nesnesi.</param>
+            <returns>Kullanıcının başarıyla güncellenip güncellenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserRepository.IsAdminAsync(System.Int32)">
+            <summary>
+            Kullanıcının admin olup olmadığını asenkron olarak kontrol eder.
+            </summary>
+            <param name="userId">Kontrol edilecek kullanıcının benzersiz kimliği.</param>
+            <returns>Belirtilen kullanıcının admin olup olmadığını belirten bir <see cref="T:System.Threading.Tasks.Task`1"/> döndürür.
+            Eğer kullanıcı bulunursa ve admin rolüne sahipse, <c>true</c> döner; aksi takdirde <c>false</c> döner.</returns>
+        </member>
+        <member name="T:MEBservis.Domain.Interfaces.IUserService">
+            <summary>
+            Kullanıcı ile ilgili işlemler için servis arayüzü.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.GetAllUsersAsync">
+            <summary>
+            Tüm kullanıcıları alır.
+            </summary>
+            <returns>Kullanıcıların bir koleksiyonu.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Verilen ID'ye sahip kullanıcıyı alır.
+            </summary>
+            <param name="id">Kullanıcının ID'si.</param>
+            <returns>Kullanıcı DTO'su veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.AddUserAsync(MEBservis.Application.DTOs.UserCreateDto)">
+            <summary>
+            Yeni bir kullanıcı ekler.
+            </summary>
+            <param name="userCreateDto">Eklenecek kullanıcı DTO'su.</param>
+            <returns>Kullanıcının ID'sini döner veya eklenemezse 0.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.UpdateUserAsync(MEBservis.Application.DTOs.UserUpdateDto)">
+            <summary>
+            Var olan bir kullanıcıyı günceller.
+            </summary>
+            <param name="userUpdateDto">Güncellenecek kullanıcı DTO'su.</param>
+            <returns>Kullanıcının başarıyla güncellenip güncellenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.UpdateUserPasswordAsync(MEBservis.Application.DTOs.UpdatePasswordDto)">
+            <summary>
+            Kullanıcının şifresini günceller.
+            </summary>
+            <param name="updatePasswordDto">Güncellenecek kullanıcı DTO'su.</param>
+            <returns>Şifrenin başarıyla güncellenip güncellenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Domain.Interfaces.IUserService.IsAdminAsync(System.Int32)">
+            <summary>
+            Kullanıcının admin olup olmadığını kontrol eder.
+            </summary>
+            <param name="userId">Kullanıcının ID'si.</param>
+            <returns>Kullanıcının admin olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="T:MEBservis.Infrastructure.Data.ApplicationDbContext">
+            <summary>
+            Entity Framework Core veri tabanı bağlamını temsil eder.
+            Bu sınıf, veri tabanı ile etkileşim kurmak ve veri modeli yapılandırması yapmak için kullanılır.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:MEBservis.Infrastructure.Data.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{MEBservis.Infrastructure.Data.ApplicationDbContext})" -->
+        <member name="P:MEBservis.Infrastructure.Data.ApplicationDbContext.Users">
+            <summary>
+            Kullanıcıları temsil eden veri kümesi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Infrastructure.Data.ApplicationDbContext.UserRoles">
+            <summary>
+            Kullanıcı rollerini temsil eden veri kümesi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Infrastructure.Data.ApplicationDbContext.TrackingSessions">
+            <summary>
+            Takip oturumlarını temsil eden veri kümesi.
+            </summary>
+        </member>
+        <member name="P:MEBservis.Infrastructure.Data.ApplicationDbContext.TrackingDatas">
+            <summary>
+            Takip verilerini temsil eden veri kümesi.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Data.ApplicationDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Model yapılandırmasını özelleştirir.
+            Bu metod, veri modelinin veri tabanına nasıl karşılık geldiğini yapılandırmak için kullanılır.
+            </summary>
+            <param name="modelBuilder">Model yapılandırma araçlarını sağlayan ModelBuilder.</param>
+        </member>
+        <member name="T:MEBservis.Infrastructure.Repositories.ReportRepository">
+            <summary>
+            Rapor verileriyle ilgili veritabanı işlemlerini yöneten sınıf.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.ReportRepository.#ctor(MEBservis.Infrastructure.Data.ApplicationDbContext)">
+            <summary>
+            <see cref="T:MEBservis.Infrastructure.Repositories.ReportRepository"/> sınıfının yapıcı metodu.
+            </summary>
+            <param name="context">Veritabanı ile etkileşim kurmak için kullanılan <see cref="T:MEBservis.Infrastructure.Data.ApplicationDbContext"/> örneği.</param>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.ReportRepository.GetSessionByUserIdAndDateAsync(System.Int32,System.DateTime)">
+            <summary>
+            Belirtilen kullanıcı ve tarihe göre takip oturumlarını alır.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <param name="date">Tarih bilgisi.</param>
+            <returns>Belirtilen kullanıcı ve tarihe göre filtrelenmiş takip oturumları.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.ReportRepository.GetDataBySessionIdAsync(System.Int32)">
+            <summary>
+            Belirtilen oturum ID'sine göre takip verilerini alır.
+            </summary>
+            <param name="sessionId">Oturum ID'si.</param>
+            <returns>Belirtilen oturum ID'sine sahip takip verileri.</returns>
+        </member>
+        <member name="T:MEBservis.Infrastructure.Repositories.TrackingSessionRepository">
+            <summary>
+            Kullanıcı takip oturumları ve konum verileri için repository sınıfı.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.#ctor(MEBservis.Infrastructure.Data.ApplicationDbContext)">
+            <summary>
+            TrackingSessionRepository sınıfının yapıcı metodu.
+            </summary>
+            <param name="context">Veritabanı bağlamı (DbContext).</param>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.GetActiveSessionByUserIdAsync(System.Int32)">
+            <summary>
+            Belirtilen kullanıcı ID'sine göre aktif takip oturumunu getirir.
+            </summary>
+            <param name="userId">Kullanıcı ID'si.</param>
+            <returns>Aktif takip oturumu veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.AddTrackingSessionAsync(TrackingSession)">
+            <summary>
+            Yeni bir takip oturumu ekler.
+            </summary>
+            <param name="trackingSession">Eklenecek takip oturumu.</param>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.AddTrackingDataAsync(TrackingData)">
+            <summary>
+            Yeni bir konum verisi ekler.
+            </summary>
+            <param name="trackingData">Eklenecek konum verisi.</param>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.UserExistsAsync(System.Int32)">
+            <summary>
+            Veritabanında belirtilen kullanıcı ID'sine sahip bir kullanıcı olup olmadığını kontrol eder.
+            </summary>
+            <param name="userId">Kontrol edilecek kullanıcının ID'si.</param>
+            <returns>Kullanıcı mevcutsa <c>true</c>, değilse <c>false</c> döner.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.TrackingSessionRepository.UpdateTrackingSessionAsync(TrackingSession)">
+            <summary>
+            Veritabanındaki mevcut takip oturumunu günceller.
+            </summary>
+            <param name="trackingSession">Güncellenecek takip oturumu nesnesi.</param>
+        </member>
+        <member name="T:MEBservis.Infrastructure.Repositories.UserRepository">
+            <summary>
+            UserRepository sınıfı, kullanıcı verileri ile ilgili CRUD operasyonlarını yönetir.
+            </summary>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.#ctor(MEBservis.Infrastructure.Data.ApplicationDbContext)">
+            <summary>
+            UserRepository sınıfının bir örneğini oluşturur.
+            </summary>
+            <param name="context">Uygulama veri bağlamı.</param>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.GetAllUsersAsync">
+            <summary>
+            Veritabanındaki tüm kullanıcıları alır.
+            </summary>
+            <returns>Kullanıcıların bir koleksiyonu.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.GetUserByIdAsync(System.Int32)">
+            <summary>
+            Veritabanında verilen ID'ye sahip kullanıcıyı bulur.
+            </summary>
+            <param name="id">Kullanıcının ID'si.</param>
+            <returns>Kullanıcı nesnesi veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.GetUserByTcKimlikNoAsync(System.String)">
+            <summary>
+            Veritabanında verilen TC Kimlik Numarasına sahip kullanıcıyı bulur.
+            </summary>
+            <param name="tcKimlikNo">TC Kimlik Numarası.</param>
+            <returns>Kullanıcı nesnesi veya null.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.TcKimlikNoExistsAsync(System.String)">
+            <summary>
+            Verilen TC Kimlik Numarasının veritabanında mevcut olup olmadığını kontrol eder.
+            </summary>
+            <param name="tcKimlikNo">TC Kimlik Numarası.</param>
+            <returns>TC Kimlik Numarasının var olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.VehiclePlateNoExistsAsync(System.String)">
+            <summary>
+            Verilen araç plaka numarasının veritabanında mevcut olup olmadığını kontrol eder.
+            </summary>
+            <param name="vehiclePlateNo">Araç plaka numarası.</param>
+            <returns>Araç plaka numarasının var olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.AddUserAsync(User)">
+            <summary>
+            Verilen kullanıcıyı veritabanına ekler.
+            </summary>
+            <param name="user">Eklenecek kullanıcı nesnesi.</param>
+            <returns>Kullanıcının başarıyla eklenip eklenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.UpdateUserAsync(User)">
+            <summary>
+            Veritabanındaki mevcut bir kullanıcıyı günceller.
+            </summary>
+            <param name="user">Güncellenecek kullanıcı nesnesi.</param>
+            <returns>Kullanıcının başarıyla güncellenip güncellenmediğini belirten bir değer.</returns>
+        </member>
+        <member name="M:MEBservis.Infrastructure.Repositories.UserRepository.IsAdminAsync(System.Int32)">
+            <summary>
+            Kullanıcının admin olup olmadığını kontrol eder.
+            </summary>
+            <param name="userId">Kullanıcının ID'si.</param>
+            <returns>Kullanıcının admin olup olmadığını belirten bir değer.</returns>
+        </member>
+        <member name="T:MEBservis.Migrations.AddUserRoleSeedData">
+            <inheritdoc />
+        </member>
+        <member name="M:MEBservis.Migrations.AddUserRoleSeedData.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MEBservis.Migrations.AddUserRoleSeedData.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:MEBservis.Migrations.AddUserRoleSeedData.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:PasswordHasher">
+            <summary>
+            Şifrelerin güvenli bir biçimde hash'lenmesi ve doğrulanması işlemlerini gerçekleştiren yardımcı sınıf.
+            Bu sınıf, şifreleri hash'leyerek saklamak ve hash'lenmiş şifrelerle doğrulama yapmak için gerekli yöntemleri sağlar.
+            </summary>
+        </member>
+        <member name="M:PasswordHasher.HashPassword(System.String)">
+            <summary>
+            Şifreyi hash'ler ve güvenli bir biçimde saklanabilir hale getirir.
+            </summary>
+            <param name="password">Hash'lenmek istenen düz metin şifre.</param>
+            <returns>Hash'lenmiş şifre.</returns>
+        </member>
+        <member name="M:PasswordHasher.VerifyPassword(System.String,System.String)">
+            <summary>
+            Verilen düz metin şifrenin, hash'lenmiş şifre ile eşleşip eşleşmediğini doğrular.
+            </summary>
+            <param name="password">Doğrulanmak istenen düz metin şifre.</param>
+            <param name="hashedPassword">Hash'lenmiş şifre.</param>
+            <returns>Şifreler eşleşiyorsa <c>true</c>, aksi takdirde <c>false</c> döner.</returns>
+        </member>
+        <member name="T:TrackingData">
+            <summary>
+            Konum verilerini takip etmek için kullanılan sınıf.
+            </summary>
+        </member>
+        <member name="P:TrackingData.TrackingId">
+            <summary>
+            Otomatik artan benzersiz ID.
+            </summary>
+        </member>
+        <member name="P:TrackingData.SessionId">
+            <summary>
+            İlgili oturum ID'si.
+            </summary>
+        </member>
+        <member name="P:TrackingData.TrackingSession">
+            <summary>
+            Takip oturumu entity'si ile ilişki.
+            </summary>
+        </member>
+        <member name="P:TrackingData.Latitude">
+            <summary>
+            Enlem bilgisi.
+            </summary>
+        </member>
+        <member name="P:TrackingData.Longitude">
+            <summary>
+            Boylam bilgisi.
+            </summary>
+        </member>
+        <member name="P:TrackingData.Timestamp">
+            <summary>
+            Konumun kaydedildiği tarih ve saat.
+            </summary>
+        </member>
+        <member name="T:TrackingSession">
+            <summary>
+            Kullanıcı takip oturumlarını temsil eden sınıf.
+            </summary>
+        </member>
+        <member name="P:TrackingSession.SessionId">
+            <summary>
+            Otomatik artan benzersiz ID.
+            </summary>
+        </member>
+        <member name="P:TrackingSession.UserId">
+            <summary>
+            İlgili kullanıcı ID'si.
+            </summary>
+        </member>
+        <member name="P:TrackingSession.User">
+            <summary>
+            Kullanıcı entity'si ile ilişki.
+            </summary>
+        </member>
+        <member name="P:TrackingSession.StartTime">
+            <summary>
+            Takibin başlatıldığı zaman.
+            </summary>
+        </member>
+        <member name="P:TrackingSession.EndTime">
+            <summary>
+            Takibin bitirildiği zaman (nullable).
+            </summary>
+        </member>
+        <member name="P:TrackingSession.TrackingData">
+            <summary>
+            Takip oturumuna ait konum verileri.
+            </summary>
+        </member>
+        <member name="T:User">
+            <summary>
+            Kullanıcı bilgilerini temsil eden sınıf.
+            </summary>
+        </member>
+        <member name="P:User.UserId">
+            <summary>
+            Benzersiz ID.
+            </summary>
+        </member>
+        <member name="P:User.FirstName">
+            <summary>
+            Kullanıcının adı.
+            </summary>
+        </member>
+        <member name="P:User.LastName">
+            <summary>
+            Kullanıcının soyadı.
+            </summary>
+        </member>
+        <member name="P:User.TcKimlikNo">
+            <summary>
+            Kullanıcının TC Kimlik Numarası.
+            </summary>
+        </member>
+        <member name="P:User.PasswordHash">
+            <summary>
+            Kullanıcının şifresi (hashlenmiş).
+            </summary>
+        </member>
+        <member name="P:User.PhoneNumber">
+            <summary>
+            Kullanıcının telefon numarası.
+            </summary>
+        </member>
+        <member name="P:User.VehiclePlateNo">
+            <summary>
+            Kullanıcının araç plaka numarası.
+            </summary>
+        </member>
+        <member name="P:User.CreatedAt">
+            <summary>
+            Hesabın oluşturulma tarihi.
+            </summary>
+        </member>
+        <member name="P:User.RoleId">
+            <summary>
+            Kullanıcının rolü (varsayılan olarak 1).
+            </summary>
+        </member>
+        <member name="P:User.TrackingSessions">
+            <summary>
+            Kullanıcının sahip olduğu takip oturumları.
+            </summary>
+        </member>
+        <member name="P:User.UserRole">
+            <summary>
+            Kullanıcının rolü.
+            </summary>
+        </member>
+        <member name="T:UserRole">
+            <summary>
+            Kullanıcı rollerini temsil eden sınıf.
+            </summary>
+        </member>
+        <member name="P:UserRole.UserRoleId">
+            <summary>
+            Benzersiz kullanıcı rolü ID'si.
+            </summary>
+        </member>
+        <member name="P:UserRole.UserRoleName">
+            <summary>
+            Kullanıcı rolünün adı.
+            </summary>
+        </member>
+    </members>
+</doc>
